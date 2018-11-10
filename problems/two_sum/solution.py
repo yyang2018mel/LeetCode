@@ -1,14 +1,12 @@
 class Solution:
     def twoSum(self, nums, target):
-        """
-        :type nums: List[int]
-        :type target: int
-        :rtype: List[int]
-        """
-        numsDict = dict()
+        value_dict = dict()
         for i in range(len(nums)):
-            complement = target - nums[i]
-            if complement in numsDict:
-                return [i, numsDict[complement]]
-            numsDict[nums[i]] = i
+            v = nums[i]
+            complement = target - v
+            if complement in value_dict:
+                return [value_dict[complement], i]
+            else:
+                value_dict[v] = i
+    
         
