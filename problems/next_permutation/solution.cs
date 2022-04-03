@@ -1,46 +1,35 @@
 public class Solution
 {
-    private int SmallestGreaterThan(int[] nums, int endIdx, int target)
+    private int IsStrictlyDescendingFrom(int[] arr)
     {
-        for(var j = nums.Length-1; j >= endIdx; j--)
+        for(var i = arr.Length - 1; i > 0; i--)
         {
-            if (nums[j] > target) return j;
+            if (arr[i] > arr[i - 1])
+                return i;
         }
-
-        throw new Exception("SmallestGreaterThan");
-    }
-
-    private bool IsInDescendingOrder(int [] nums, int startIdx)
-    {
-        // provided everything after 'startIdx' is in descending order
-        if (startIdx < 0)
-        {
-            throw new Exception("IsInDescendingOrder - Invalid startIdx");
-        }
-        else if (startIdx == nums.Length - 1)
-        {
-            return true;
-        }
-        else
-            return nums[startIdx] >= nums[startIdx + 1];
+        return 0;
     }
 
     public void NextPermutation(int[] nums)
     {
-        var last = nums.Length - 1;
-        for(var j = last-1; j >=0; j--)
+        var len = nums.Length;
+        var subStartIdx = IsStrictlyDescendingFrom(nums);
+
+
+        if (subStartIdx == 0)
         {
-            if(!IsInDescendingOrder(nums, j))
-            {
-                // e.g. 1 3 4 2 => 1 4 2 3
-                // e.g. 1 4 3 2 => 2 1 3 4
-                var sgt = SmallestGreaterThan(nums, j + 1, nums[j]);
-                (nums[j], nums[sgt]) = (nums[sgt], nums[j]);
-                Array.Sort(nums, j + 1, nums.Length - j - 1);
-                return;
-            }
+            Array.Sort(nums);
+            return;
         }
 
-        Array.Sort(nums);
+        var toBeReplacedIdx = subStartIdx - 1;
+        var toReplaceIdx =
+            Enumerable.Range(subStartIdx, len - subStartIdx)
+            .Reverse()
+            .First(i => nums[i] > nums[toBeReplacedIdx]);
+
+        (nums[toBeReplacedIdx], nums[toReplaceIdx]) = (nums[toReplaceIdx], nums[toBeReplacedIdx]);
+        Array.Sort(nums, subStartIdx, len - subStartIdx);
+
     }
 }
