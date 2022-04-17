@@ -1,50 +1,79 @@
-using static System.Math;
-
-public class Solution
+public class Solution 
 {
-    public static int FindPivot(int[] nums, int start, int end)
+    // log(n)
+    private int BinarySearchForRotationPivot(int[] nums)
     {
-        // gurantee to find one pivot
-        var mid = (start + end) / 2;
-
-        if (mid + 1 >= nums.Length)
-            return mid;
-
-        if (nums[mid] > nums[mid + 1])
+        var start = 0;
+        var end = nums.Length-1;
+        
+        while(start <= end)
         {
-            return mid + 1;
+            var mid = (start+end)/2;
+            var midNum = nums[mid];
+            var _midNum = mid - 1 >= 0 ? nums[mid-1] : Int32.MinValue;
+            var midNum_ = mid + 1 < nums.Length ? nums[mid+1] : Int32.MaxValue;
+            
+            if(_midNum > midNum && midNum < midNum_)
+            {
+                return mid;
+            }
+            
+            if (midNum > nums[end])
+            {
+                start = mid + 1;    
+            }
+            else
+            {
+                end = mid - 1;
+            }
         }
-
-        if(mid-1 >= 0 && nums[mid] < nums[mid-1])
-        {
-            return mid;
-        }
-
-        if(nums[start] < nums[mid]) 
-        {
-            // e.g. [3 4 5 6 0 1]
-            return FindPivot(nums, mid + 1, end);
-        }
-        else
-        {
-            // e.g. [6 7 0 1 2 3 4 5]
-            return FindPivot(nums, start, mid - 1);
-        }
+        return 0;
     }
-
-    public int Search(int[] nums, int target)
+    
+    // log(n)
+    private int BinarySearchWithRotationPivot(int[] nums, int pivot, int target)
     {
-        var pivotIdx = FindPivot(nums, 0, nums.Length);
-
-        if (pivotIdx >= 1 && target >= nums[0] && target <= nums[pivotIdx - 1])
+        int GetUnrotatedValue(int indexIfSorted)
         {
-            return Max(-1, Array.BinarySearch(nums, 0, pivotIdx, target));
+            var rotatedIndex = (indexIfSorted+pivot) % nums.Length;
+            return nums[rotatedIndex];
         }
-        else if (target >= nums[pivotIdx] && target <= nums[nums.Length - 1])
+        
+        var start = 0;
+        var end = nums.Length-1;
+        while(start <= end)
         {
-            return Max(-1, Array.BinarySearch(nums, pivotIdx, nums.Length - pivotIdx, target));
+            var mid = (start+end)/2;
+            var midNum = GetUnrotatedValue(mid);
+            
+            // Console.WriteLine($"Start: {start}, End: {end}, Mid: {mid}, MidVal: {midNum}");
+            
+            if (midNum == target) 
+            {
+                var indexIfSorted = mid;
+                var rotatedIndex = (indexIfSorted+pivot) % nums.Length;
+                return rotatedIndex;
+                
+            }
+            else if (midNum > target)
+            {
+                end = mid - 1;
+            }
+            else
+            {
+                start = mid + 1;
+            }
         }
-
+        
         return -1;
+    }
+    
+    public int Search(int[] nums, int target) 
+    {
+        var pivot = BinarySearchForRotationPivot(nums);
+        // Console.WriteLine($"Find pivot located at {pivot}, value = {nums[pivot]}");
+        var result = BinarySearchWithRotationPivot(nums, pivot, target);
+        
+        return result;
     }
 }
