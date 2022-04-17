@@ -15,13 +15,14 @@ public class Solution
 {
     private bool IsMirroring(TreeNode lhs, TreeNode rhs)
     {
-        if(lhs is null && rhs is null) return true;
-        if(lhs is null || rhs is null) return false;
+        if (lhs is null && rhs is null) return true;
         
-        var sameRoot = lhs.val == rhs.val;
-        return sameRoot
-               && IsMirroring(lhs.left, rhs.right)
-               && IsMirroring(lhs.right, rhs.left);
+        if (lhs is null || rhs is null) return false;
+        
+        return 
+            lhs.val == rhs.val &&
+            IsMirroring(lhs.left, rhs.right) &&
+            IsMirroring(lhs.right, rhs.left);
     }
     
     public bool IsSymmetric(TreeNode root) 
