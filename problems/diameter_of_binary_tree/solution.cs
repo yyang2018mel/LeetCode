@@ -12,37 +12,43 @@
  * }
  */
 
-internal static class TreeExtensions
+internal static class TreeExtensions 
 {
     internal static bool IsLeaf(this TreeNode node)
     {
-        return 
-            node is not null &&
-            node.left is null &&
-            node.right is null;
+        return node is not null && node.left is null && node.right is null;
     }
 }
 
 public class Solution 
 {
-    private int diameter;
+
+    private int _diameter;
     
-    private int DepthFirstTraversal(TreeNode node, int depth)
+    private int DepthFirstTraversal(TreeNode node)
     {
-        if(node is null) return depth-1;
+        if (node.IsLeaf())
+        {
+            return 0;
+        }
         
-        if(node.IsLeaf()) return depth;
+        var leftLocalPathLen = 
+            node.left is null
+            ? 0
+            : DepthFirstTraversal(node.left)+1;
+        var rightLocalPathLen = 
+            node.right is null
+            ? 0
+            : DepthFirstTraversal(node.right)+1;
         
-        var l = DepthFirstTraversal(node.left, depth+1);
-        var r = DepthFirstTraversal(node.right, depth+1);
-        diameter = Math.Max(diameter, l+r-2*depth);
+        _diameter = Math.Max(_diameter, leftLocalPathLen+rightLocalPathLen);
         
-        return Math.Max(l,r);
+        return Math.Max(leftLocalPathLen, rightLocalPathLen);
     }
     
     public int DiameterOfBinaryTree(TreeNode root) 
     {
-        _ = DepthFirstTraversal(root, 0);
-        return diameter;
+        _ = DepthFirstTraversal(root);
+        return _diameter;
     }
 }
