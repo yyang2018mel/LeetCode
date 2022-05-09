@@ -13,39 +13,48 @@
  */
 public class Solution 
 {
-    public IList<IList<int>> LevelOrder(TreeNode root) 
+    private List<List<int>> BreadthFirstTraverse(TreeNode root)
     {
-        if (root is null) 
-            return (new List<IList<int>>()) as IList<IList<int>>;
+        var result = new List<List<int>>();
+        var queue = new Queue<(TreeNode, int)>();
         
-        var queue = new Queue<(TreeNode,int)>(); // (node, depth)
-        queue.Enqueue((root,0));
-        
-        var cache = new Dictionary<int, List<int>>();
+        if (root is not null)
+            queue.Enqueue((root,0));
         
         while(queue.Count > 0)
         {
-            var (head, depth) = queue.Dequeue();
+            var (node, depth) = queue.Dequeue();
             
-            if(cache.TryGetValue(depth, out var list))
+            if(result.Count - 1 < depth)
             {
-                list.Add(head.val);
+                var list = new List<int> { node.val };
+                result.Add(list);
             }
             else
             {
-                cache[depth] = new List<int> { head.val };
+                result[depth].Add(node.val);
             }
             
-            if (head.left is not null)
-                queue.Enqueue((head.left, depth+1));
+            if (node.left is not null)
+                queue.Enqueue((node.left, depth+1));
             
-            if (head.right is not null)
-                queue.Enqueue((head.right, depth+1));
+            if (node.right is not null)
+                queue.Enqueue((node.right, depth+1));
         }
         
-        return (
-            cache.Values
+        return result;
+        
+    }
+    
+    
+    public IList<IList<int>> LevelOrder(TreeNode root) 
+    {
+        var result = 
+            BreadthFirstTraverse(root)
             .Select(l => l as IList<int>)
-            .ToList()) as IList<IList<int>>;
+            .ToList();
+        
+        return result as IList<IList<int>>;
+        
     }
 }
