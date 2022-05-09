@@ -12,36 +12,34 @@
  * }
  */
 
-internal static class TreeExtensions
+internal static class TreeEx
 {
-    internal static bool IsLeaf(this TreeNode node)
-    {
-        return node is not null && node.left is null && node.right is null;
-    }
+    internal static bool IsLeaf(this TreeNode node) =>
+        node is not null && node.left is null && node.right is null;
 }
+
 
 public class Solution 
 {
-    private List<int> PathSum(TreeNode node, int currentSum)
+    private int _targetSum;
+    
+    private bool PreOrderTraverse(TreeNode node, int pathLenSoFar = 0)
     {
-        var result = new List<int> ();
-     
-        if (node is null) return result;
+        if (node is null) return false;
         
-        if (node.IsLeaf()) return new List<int> { currentSum + node.val };
+        if (node.IsLeaf()) return pathLenSoFar+node.val == _targetSum;
         
-        result.AddRange(PathSum(node.left, currentSum + node.val));
+        var hasPathInLeft  = PreOrderTraverse(node.left, pathLenSoFar + node.val);
+        var hasPathInRight = PreOrderTraverse(node.right, pathLenSoFar + node.val); 
+        return hasPathInLeft || hasPathInRight;
         
-        result.AddRange(PathSum(node.right, currentSum + node.val));
-        
-        return result;
     }
     
     
     public bool HasPathSum(TreeNode root, int targetSum) 
     {
-        var list = PathSum(root, 0);
+        _targetSum = targetSum;
         
-        return list.Exists(s => s == targetSum);
+        return PreOrderTraverse(root);
     }
 }
