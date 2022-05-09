@@ -13,19 +13,21 @@
  */
 public class Solution 
 {
-    private void Inorder(TreeNode root, List<int> trace)
+    private List<int> DoInorderTraversal(TreeNode node) 
     {
-        if(root is null) return;
+        var result = new List<int>();
+        if (node is null)  return result;
         
-        Inorder(root.left, trace);
-        trace.Add(root.val);
-        Inorder(root.right, trace);
+        result.AddRange(DoInorderTraversal(node.left));
+        result.Add(node.val);
+        result.AddRange(DoInorderTraversal(node.right));
+        return result;
+        
     }
     
     public IList<int> InorderTraversal(TreeNode root) 
     {
-        var trace = new List<int>();
-        Inorder(root, trace);
-        return trace as IList<int>;
+        var result = DoInorderTraversal(root);
+        return result as IList<int>;
     }
 }
