@@ -11,19 +11,31 @@
  *     }
  * }
  */
-public class Solution {
-    
-    private int maxDepth(TreeNode root) {
+internal static class TreeNodeEx
+{
+    internal static bool IsLeaf(this TreeNode node) => 
+        node is not null && node.left is null && node.right is null;
+}
+
+
+public class Solution 
+{
+    private int Probe(TreeNode node, int depth=1)
+    {
+        if (node is null) return depth-1;
         
-        if (root == null) return 0;
+        if (node.IsLeaf()) return depth;
         
-        if (root.left == null && root.right == null) return 1;
+        var maxDepthLeft  = Probe(node.left, depth+1);
         
-        return 1 + Math.Max( maxDepth(root.left), maxDepth(root.right) );
+        var maxDepthRight = Probe(node.right, depth+1);
+        
+        return Math.Max(maxDepthLeft, maxDepthRight);
         
     }
     
-    public int MaxDepth(TreeNode root) {
-        return maxDepth(root);
+    public int MaxDepth(TreeNode root) 
+    {
+        return Probe(root);
     }
 }
