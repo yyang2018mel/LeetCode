@@ -13,22 +13,22 @@
  */
 public class Solution 
 {
-    
-    private void Postorder(TreeNode root, List<int> trace)
+    private List<int> Postorder(TreeNode node)
     {
-        if (root is null)
-            return;
+        if (node is null) return new List<int>();
         
-        Postorder(root.left, trace);
-        Postorder(root.right, trace);
-        trace.Add(root.val);
+        var left = Postorder(node.left);
+        var right = Postorder(node.right);
+        var result = left;
+        result.AddRange(right);
+        result.Add(node.val);
+        return result;
     }
+    
     
     public IList<int> PostorderTraversal(TreeNode root) 
     {
-        var trace = new List<int>();
-        Postorder(root, trace);
-        
-        return trace as IList<int>;
+        var result = Postorder(root);
+        return result as IList<int>;
     }
 }
