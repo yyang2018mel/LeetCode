@@ -1,27 +1,33 @@
 public class Solution 
 {
-    private bool DFSFindPath(
+    private bool BFSFindPath(
         List<int>[] adjacencyList, 
         int source, 
-        int destination, 
-        HashSet<int> visited)
+        int destination)
     {
-        if (source == destination) return true;
+        var queue = new Queue<int>();
+        var visited = new HashSet<int>();
+        queue.Enqueue(source);
+        visited.Add(source);
         
-        for(var i = 0; i < adjacencyList[source]?.Count; i++)
+        while(queue.Count > 0)
         {
-            var neighbori= adjacencyList[source][i];
+            var node = queue.Dequeue();
             
-            if (visited.Contains(neighbori)) 
-                continue;
-            else
+            if (node == destination) 
+                return true;
+            
+            var neighbors = adjacencyList[node];
+            foreach(var neighbor in neighbors)
             {
-                visited.Add(neighbori);
-                if(DFSFindPath(adjacencyList, neighbori, destination, visited))
-                    return true;
+                if (!visited.Contains(neighbor))
+                {
+                    queue.Enqueue(neighbor);    
+                    visited.Add(neighbor);
+                }
             }
         }
-
+        
         return false;
     }
     
@@ -46,7 +52,7 @@ public class Solution
         
         var visited = new HashSet<int> { source };
         
-        var found = DFSFindPath(adjacencyList, source, destination, visited);
+        var found = BFSFindPath(adjacencyList, source, destination);
         
         return found;
     }
