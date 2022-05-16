@@ -1,27 +1,17 @@
-public class Solution {
-    
-    private int?[] memo;
+public class Solution 
+{
+    public int Fib(int n) 
+    {
+        if (n == 0) return 0;
+        if (n == 1) return 1;
         
-    
-    private int fib(int n) {
-        
-        if(memo[n] != null) 
-            return memo[n].Value;
-        
-        var result = 
-            n == 0
-            ? 0
-            : n == 1
-                ? 1
-                : fib(n-1) + fib(n-2);
-        
-        memo[n] = result;
-        return result;
-        
-    }
-    
-    public int Fib(int n) {
-        memo = new int?[n+1];
-        return fib(n);
+        var cache = new int[n+1];
+        cache[0] = 0;
+        cache[1] = 1;
+        for(var i = 2; i <= n; i++)
+        {
+            cache[i] = cache[i-1] + cache[i-2];
+        }
+        return cache[n];
     }
 }
