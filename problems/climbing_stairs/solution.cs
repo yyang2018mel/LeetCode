@@ -1,26 +1,20 @@
-public class Solution {
-    
-    private int?[] memo;
-    
-    private int climbStairs(int n) {
+public class Solution 
+{
+    public int ClimbStairs(int n) 
+    {
+        if (n == 1) return 1;
+        if (n == 2) return 2;
         
-        if(memo[n] != null) return memo[n].Value;
+        var ways = new int[n+1];
+        ways[0] = 1;
+        ways[1] = 1;
+        ways[2] = 2;
         
-        var result = 
-            n == 1 
-            ? 1
-            : n == 2
-                ? 2
-                : climbStairs(n-1) + climbStairs(n-2);
-            
+        for(var s = 3; s <=n; s++)
+        {
+            ways[s] = ways[s-1] + ways[s-2];
+        }
         
-        memo[n] = result;
-        return result;
-        
-    }
-    
-    public int ClimbStairs(int n) {
-        memo = new int?[n+1];
-        return climbStairs(n);
+        return ways[n];
     }
 }
